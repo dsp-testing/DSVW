@@ -23,7 +23,7 @@ def init():
 class ReqHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         path, query = self.path.split('?', 1) if '?' in self.path else (self.path, "")
-        code, content, params, cursor = http.client.OK, HTML_PREFIX, dict((match.group("parameter"), urllib.parse.unquote(','.join(re.findall(r"(?:\A|[?&])%s=([^&]+)" % match.group("parameter"), query)))) for match in re.finditer(r"((\A|[?&])(?P<parameter>[\w\[\]]+)=)([^&]+)", query)), connection.cursor()
+        code, content, params, cursor = http.client.OK, HTML_PREFIX, urllib.parse.parse_qs(query), connection.cursor()
         try:
             if path == '/':
                 if "id" in params:
